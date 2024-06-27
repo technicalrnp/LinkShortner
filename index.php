@@ -2,11 +2,45 @@
 
 $USER = "root";
 $PASSWORD = "";
-$HOST = "localhost";
+$HOST = "db";
 $DATABASE = "link_shortner_db";
 $TABLE = "link_shortner_table";
 
 $con = mysqli_connect($HOST, $USER, $PASSWORD, $DATABASE) or die("unable to connect to database");
+
+
+
+// Create database
+$sql = "CREATE DATABASE IF NOT EXISTS $DATABASE";
+if (mysqli_query($con, $sql)) {
+
+  // Select the database
+  mysqli_select_db($con, $DATABASE);
+
+  // Read SQL file
+  $sqlFile = "./sql/link_shortner_table.sql";
+  $sql = file_get_contents($sqlFile);
+  if ($sql !== false) {
+    // die("Error reading SQL file\n");
+    // Execute SQL file
+    try {
+      if (mysqli_multi_query($con, $sql)) {
+        do {
+          if ($result = mysqli_store_result($con)) {
+            mysqli_free_result($result);
+          }
+        } while (mysqli_next_result($con));
+        // echo "SQL script imported successfully\n";
+      } else {
+        // echo "Error importing SQL script: " . mysqli_error($conn);
+      }
+    } catch (\Throwable $th) {
+      //throw $th;
+    }
+  }
+} else {
+  echo "Error creating database: " . mysqli_error($con);
+}
 
 
 function ShortURL($url)
@@ -32,7 +66,8 @@ function RedirectURL($url)
     if ($result) {
         $data = mysqli_fetch_assoc($result);
         $redirected_url = $data['base_url'];
-        header("location: $redirected_url ");
+        // header("location: $redirected_url ");
+        echo "<script> window.location.href = '$redirected_url'; </script>";
         exit;
     }
 }
