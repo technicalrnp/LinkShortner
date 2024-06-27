@@ -50,6 +50,23 @@ A fast and straightforward PHP-based Link Shortener. No login or registration re
 - `index.php`: Main application file.
 - `link_shortner_table.sql`: SQL file for database setup.
 
+## Docker
+
+1. **Docker Compose Up**
+    ```
+    docker-compose up -d
+    ```
+
+2. **Visit**
+    ```bash
+    open localhost in browser
+    ```
+
+3. **PHPMYADMIN**
+    ```bash
+    open localhost:8080 
+    ```
+
 ## Notes
 
 - This Link Shortener is designed for simplicity and speed.
